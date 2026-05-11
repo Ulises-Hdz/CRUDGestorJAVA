@@ -15,6 +15,8 @@ public class CRUDGestorAlumnos {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        frmMain fMain = new frmMain();
+        fMain.setVisible(true);
     }
     
 }
