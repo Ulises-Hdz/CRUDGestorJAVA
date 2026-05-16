@@ -18,7 +18,8 @@ public class frmMain extends javax.swing.JFrame {
     public frmMain() {
         initComponents();
     }
-
+    
+        frmAlumno fALumno = new frmAlumno();
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,6 +62,7 @@ public class frmMain extends javax.swing.JFrame {
         );
 
         btnEntrar.setText("ENTRAR");
+        btnEntrar.addActionListener(this::btnEntrarActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -104,6 +106,11 @@ public class frmMain extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
+        // TODO add your handling code here:
+        fALumno.setVisible(true);
+    }//GEN-LAST:event_btnEntrarActionPerformed
 
     /**
      * @param args the command line arguments
