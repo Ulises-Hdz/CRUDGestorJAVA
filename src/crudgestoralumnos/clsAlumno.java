@@ -33,22 +33,22 @@ public class clsAlumno {
     
     public String aTexto(){
         String alumno = this.Nombre + "|" + this.Matricula + "|" + this.Estatus + "|" +
-                this.Curp + "|" + this.FechaNacimiento;
+                this.Curp + "|" + this.FechaNacimiento + "|" + this.Telefono;
         return alumno;
     }
     
     public void guardar() {
         
-        mAlumno articulo = new mAlumno();
+        mAlumno alumno = new mAlumno();
         // Enviamos la cadena de texto
-        articulo.insertar(this.aTexto());
+        alumno.insertar(this.aTexto());
         
         System.out.println(this.aTexto());
     }
     
      public DefaultListModel<String> LlenarLista(){
         //Instancia desde el modelo
-        mCliente mClient = new mCliente();
+        mAlumno mClient = new mAlumno();
         //Llenamos la variable con los datos del modelo
         ArrayList<String> datos = mClient.consultar();
         // Creamos la plantilla en blanco para el modelo
@@ -57,40 +57,44 @@ public class clsAlumno {
         for ( String registro: datos){
             modelLista.addElement(registro);
         }
-        // Devuelve los datos cargados en el modelo de lsita
+        // Devuelve los datos cargados en el modelo de lista
         return modelLista;
     }
     
-        public void actualizar(String newNoCliente , String newNombre , String newTipoCliente , String newRazonSocial) {
+    public void actualizar(String newNombre , String newMatricula , boolean newEstatus ,
+                String newCurp , LocalDate newFecha , String newTelefono) {
         
-        String nuevaLinea = newNoCliente + "|" + newNombre + "|" + newTipoCliente + "|" + newRazonSocial;
-        String lineaOriginal = this.Nocliente + "|" + this.Nombre + "|" + this.Tipo + "|" + this.Razon;
+        String nuevaLinea = newNombre + "|" + newMatricula + "|" + newEstatus + "|"
+                + newCurp + "|" + newFecha + "|" + newTelefono;
+        String lineaOriginal = this.Nombre + "|" + this.Matricula + "|" + this.Estatus + "|" +
+                this.Curp + "|" + this.FechaNacimiento + "|" + this.Telefono;
         
         //Imprimir los nuevos valores 
         System.out.println("Valores nuevos" + nuevaLinea);
         System.out.println("Valores originales" + lineaOriginal);
         
         //Solicita la actualizacion del registro
-        mCliente mClient = new mCliente();
+        mAlumno mAlumn = new mAlumno();
         
-        mClient.update(lineaOriginal, nuevaLinea , "listado_clientes.txt");
+        mAlumn.update(lineaOriginal, nuevaLinea , "listado_clientes.txt");
     }
         
     public void eliminar() {
         // Registro a eliminar
-        String lineaOriginal = this.Nocliente + "|" + this.Nombre + "|" + this.Tipo + "|" + this.Razon;
+        String lineaOriginal = this.Nombre + "|" + this.Matricula + "|" + this.Estatus + "|" +
+                this.Curp + "|" + this.FechaNacimiento + "|" + this.Telefono;
         
         //Imprimir los valores originales 
         System.out.println("Valores originales" + lineaOriginal);
         
         //Solicita la eliminacion del registro
-        mCliente mClient = new mCliente();
+        mAlumno mClient = new mAlumno();
         
         mClient.delete(lineaOriginal,"listado_clientes.txt");
         
     }
     
-    public String getDescripcion() {
+    public String getNombre() {
         return this.Nombre;
     }
     
