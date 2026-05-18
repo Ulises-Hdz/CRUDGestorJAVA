@@ -31,6 +31,10 @@ public class clsAlumno {
         this.Telefono = Telefono;
     }
     
+    public clsAlumno(){
+
+    }
+    
     public String aTexto(){
         String alumno = this.Nombre + "|" + this.Matricula + "|" + this.Estatus + "|" +
                 this.Curp + "|" + this.FechaNacimiento + "|" + this.Telefono;
@@ -76,7 +80,7 @@ public class clsAlumno {
         //Solicita la actualizacion del registro
         mAlumno mAlumn = new mAlumno();
         
-        mAlumn.update(lineaOriginal, nuevaLinea , "listado_clientes.txt");
+        mAlumn.update(lineaOriginal, nuevaLinea , "listado_alumnos.txt");
     }
         
     public void eliminar() {
@@ -88,9 +92,9 @@ public class clsAlumno {
         System.out.println("Valores originales" + lineaOriginal);
         
         //Solicita la eliminacion del registro
-        mAlumno mClient = new mAlumno();
+        mAlumno mAlumn = new mAlumno();
         
-        mClient.delete(lineaOriginal,"listado_clientes.txt");
+        mAlumn.delete(lineaOriginal,"listado_alumnos.txt");
         
     }
     
@@ -98,4 +102,7 @@ public class clsAlumno {
         return this.Nombre;
     }
     
+    public LocalDate getFechaNacimiento(){
+        return this.FechaNacimiento;
+    }
 }

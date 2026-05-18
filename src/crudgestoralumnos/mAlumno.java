@@ -84,7 +84,7 @@ public class mAlumno {
             }
             
         } catch (Exception e) {
-            System.out.println("Error al actualizar" + e.getMessage());
+            System.out.println("Error al actualizar " + e.getMessage());
         }
         
         if(actualizado){
