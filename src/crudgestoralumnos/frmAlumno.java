@@ -4,10 +4,30 @@
  */
 package crudgestoralumnos;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.FileWriter;
+
+import java.io.FileOutputStream;
+import javax.swing.ListModel;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 /**
  *
  * @author dogza
@@ -120,25 +140,21 @@ public class frmAlumno extends javax.swing.JFrame {
         jLabel7.setText("Telefono");
 
         lblNombre.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
-        lblNombre.setForeground(new java.awt.Color(204, 204, 204));
         lblNombre.setText("Nombre...");
 
         lblMatricula.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
-        lblMatricula.setForeground(new java.awt.Color(204, 204, 204));
         lblMatricula.setText("Matricula...");
 
         lblCurp.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
-        lblCurp.setForeground(new java.awt.Color(204, 204, 204));
         lblCurp.setText("CURP...");
 
         lblFechaNacimiento.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
-        lblFechaNacimiento.setForeground(new java.awt.Color(204, 204, 204));
         lblFechaNacimiento.setText("Fecha...");
 
         lblTelefono.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
-        lblTelefono.setForeground(new java.awt.Color(204, 204, 204));
         lblTelefono.setText("Telefono...");
 
+        chkEstatus2.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         chkEstatus2.setText("Activo");
         chkEstatus2.addActionListener(this::chkEstatus2ActionPerformed);
 
@@ -149,27 +165,24 @@ public class frmAlumno extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(51, 51, 51)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblMatricula, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                            .addComponent(chkEstatus2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblCurp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblFechaNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 50, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
+                .addGap(51, 51, 51)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblMatricula, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                    .addComponent(chkEstatus2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCurp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblFechaNacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,8 +214,7 @@ public class frmAlumno extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblTelefono)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Actualizacion de Alumno", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Comic Sans MS", 0, 12))); // NOI18N
@@ -315,7 +327,6 @@ public class frmAlumno extends javax.swing.JFrame {
         btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
         lstAlumnos.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
-        lstAlumnos.setForeground(new java.awt.Color(204, 204, 204));
         lstAlumnos.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Ulises de la Cruz...", "Ethan Alfredo... ", "Jorge Alberto...", " ", " ", " " };
             public int getSize() { return strings.length; }
@@ -349,8 +360,8 @@ public class frmAlumno extends javax.swing.JFrame {
                     .addComponent(txtBuscarMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Registro de Alumno", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Comic Sans MS", 0, 12))); // NOI18N
@@ -462,10 +473,12 @@ public class frmAlumno extends javax.swing.JFrame {
 
         jmiJson.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         jmiJson.setText("Exportar Json");
+        jmiJson.addActionListener(this::jmiJsonActionPerformed);
         jMenu1.add(jmiJson);
 
         jmiReporte.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         jmiReporte.setText("Reporte PDF");
+        jmiReporte.addActionListener(this::jmiReporteActionPerformed);
         jMenu1.add(jmiReporte);
 
         jMenuBar1.add(jMenu1);
@@ -497,10 +510,10 @@ public class frmAlumno extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -528,6 +541,204 @@ public class frmAlumno extends javax.swing.JFrame {
             updateAlumno = null;
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void jmiJsonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiJsonActionPerformed
+ try {
+        // Obtener lista de alumnos
+        clsAlumno alumno = new clsAlumno();
+        javax.swing.ListModel<String> lista = alumno.LlenarLista();
+
+        List<clsAlumno> alumnos = new ArrayList<>();
+
+        for (int i = 0; i < lista.getSize(); i++) {
+
+            String registro = lista.getElementAt(i);
+            String[] datos = registro.split("\\|");
+
+            String nombre = datos[0].replace("Nombre: ", "").trim();
+            String matricula = datos[1].replace("Matricula: ", "").trim();
+            boolean estatus = Boolean.parseBoolean(
+                    datos[2].replace("Estatus: ", "").trim()
+            );
+            String curp = datos[3].replace("Curp: ", "").trim();
+
+            String fechaTexto =
+                    datos[4].replace("Fecha de Nacimiento: ", "").trim();
+
+            DateTimeFormatter formato =
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            LocalDate fecha =
+                    LocalDate.parse(fechaTexto, formato);
+
+            String telefono =
+                    datos[5].replace("Telefono: ", "").trim();
+
+            clsAlumno nuevo =
+                    new clsAlumno(nombre,
+                                  matricula,
+                                  estatus,
+                                  curp,
+                                  fecha,
+                                  telefono);
+
+            alumnos.add(nuevo);
+        }
+
+        // Convertir lista completa a JSON bonito
+        Gson gson =
+                new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+
+        String json =
+                gson.toJson(alumnos);
+
+        // Guardar archivo JSON
+        FileWriter writer =
+                new FileWriter("alumnos.json");
+
+        writer.write(json);
+        writer.close();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Exportación JSON realizada correctamente"
+        );
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Error: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
+
+        System.out.println(e);
+        }      
+    }//GEN-LAST:event_jmiJsonActionPerformed
+
+    private void jmiReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiReporteActionPerformed
+    try {
+
+        // Crear documento PDF
+        Document documento = new Document();
+
+        PdfWriter.getInstance(
+                documento,
+                new FileOutputStream("Reporte_Alumnos.pdf")
+        );
+
+        documento.open();
+
+        // Título
+        Font titulo =
+                FontFactory.getFont(
+                        FontFactory.HELVETICA_BOLD,
+                        18
+                );
+
+        Paragraph encabezado =
+                new Paragraph(
+                        "Reporte General de Alumnos\n\n",
+                        titulo
+                );
+
+        encabezado.setAlignment(Element.ALIGN_CENTER);
+
+        documento.add(encabezado);
+
+
+        // Crear tabla PDF
+        PdfPTable tabla = new PdfPTable(6);
+
+        tabla.addCell("Nombre");
+        tabla.addCell("Matricula");
+        tabla.addCell("Estatus");
+        tabla.addCell("CURP");
+        tabla.addCell("Fecha");
+        tabla.addCell("Telefono");
+
+
+        // Obtener alumnos
+        clsAlumno alumno = new clsAlumno();
+
+        ListModel<String> lista =
+                alumno.LlenarLista();
+
+
+        for(int i=0; i<lista.getSize(); i++){
+
+            String registro =
+                    lista.getElementAt(i);
+
+            String datos[] =
+                    registro.split("\\|");
+
+            tabla.addCell(
+                    datos[0]
+                    .replace("Nombre: ","")
+                    .trim()
+            );
+
+            tabla.addCell(
+                    datos[1]
+                    .replace("Matricula: ","")
+                    .trim()
+            );
+
+            String estatus =
+                datos[2]
+                .replace("Estatus: ","")
+                .trim();
+
+                if(estatus.equalsIgnoreCase("true")){
+                tabla.addCell("Activo");
+                }
+                else{
+                tabla.addCell("Inactivo");
+            }
+
+            tabla.addCell(
+                    datos[3]
+                    .replace("Curp: ","")
+                    .trim()
+            );
+
+            tabla.addCell(
+                    datos[4]
+                    .replace("Fecha de Nacimiento: ","")
+                    .trim()
+            );
+
+            tabla.addCell(
+                    datos[5]
+                    .replace("Telefono: ","")
+                    .trim()
+            );
+        }
+
+        documento.add(tabla);
+
+        documento.close();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "PDF exportado correctamente"
+        );
+
+    }
+    catch(Exception e){
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Error: "+e.getMessage()
+        );
+
+        System.out.println(e);
+        }
+    }//GEN-LAST:event_jmiReporteActionPerformed
 
     private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtTelefonoActionPerformed
         // TODO add your handling code here:
@@ -628,7 +839,10 @@ public class frmAlumno extends javax.swing.JFrame {
             String curp = datos[3].replace("Curp: ", "").trim();
             String fecha = datos[4].replace("Fecha de Nacimiento: ", "").trim();
             String telefono = datos[5].replace("Telefono: ", "").trim();
-
+            
+            chkEstatus1.setEnabled(false);
+            chkEstatus2.setEnabled(false);
+            
             // Se toma del txt como yyyy-MM-dd
             DateTimeFormatter formatoEntrada = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate fechaNac = java.time.LocalDate.parse(fecha, formatoEntrada);

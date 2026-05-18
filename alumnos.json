@@ -1,0 +1,14 @@
+[
+  {
+    "Nombre": "Juan Perez Barba",
+    "Matricula": "JUAN35673456",
+    "Estatus": true,
+    "Curp": "PEBA347457245624",
+    "FechaNacimiento": {
+      "year": 2001,
+      "month": 12,
+      "day": 12
+    },
+    "Telefono": "37823462345"
+  }
+]
