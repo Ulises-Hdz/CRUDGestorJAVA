@@ -29,6 +29,16 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Dimension;
+
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+
+import javax.swing.ListModel;
+
 /**
  *
  * @author dogza
@@ -626,10 +636,39 @@ public class frmAlumno extends javax.swing.JFrame {
     }//GEN-LAST:event_jmiJsonActionPerformed
 
     private void jmiReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiReporteActionPerformed
-    try {
+     Font fuenteTitulo =
+            FontFactory.getFont(
+                    FontFactory.HELVETICA_BOLD,
+                    18,
+                    BaseColor.BLACK
+            );
 
-        // Crear documento PDF
-        Document documento = new Document();
+    Font fuenteSubtitulo =
+            FontFactory.getFont(
+                    FontFactory.HELVETICA,
+                    12,
+                    BaseColor.DARK_GRAY
+            );
+
+    Font fuenteCabecera =
+            FontFactory.getFont(
+                    FontFactory.HELVETICA_BOLD,
+                    12,
+                    BaseColor.WHITE
+            );
+
+    Font fuenteTotal =
+            FontFactory.getFont(
+                    FontFactory.HELVETICA_BOLD,
+                    13,
+                    BaseColor.BLUE
+            );
+
+
+    Document documento =
+            new Document();
+
+    try{
 
         PdfWriter.getInstance(
                 documento,
@@ -638,43 +677,135 @@ public class frmAlumno extends javax.swing.JFrame {
 
         documento.open();
 
-        // Título
-        Font titulo =
-                FontFactory.getFont(
-                        FontFactory.HELVETICA_BOLD,
-                        18
-                );
 
-        Paragraph encabezado =
+        // LOGO
+        try{
+
+            Image logo =
+                    Image.getInstance("logo.jpg");
+
+            logo.scaleToFit(120,80);
+
+            logo.setAlignment(
+                    Element.ALIGN_RIGHT
+            );
+
+            documento.add(logo);
+
+        }
+        catch(Exception e){
+
+            System.out.println(
+             "No se encontró logo.jpg"
+            );
+
+        }
+
+
+        // ENCABEZADO
+        Paragraph escuela =
                 new Paragraph(
-                        "Reporte General de Alumnos\n\n",
-                        titulo
+                 "SISTEMA DE GESTION DE ALUMNOS",
+                 fuenteTitulo
                 );
 
-        encabezado.setAlignment(Element.ALIGN_CENTER);
-
-        documento.add(encabezado);
+        documento.add(escuela);
 
 
-        // Crear tabla PDF
-        PdfPTable tabla = new PdfPTable(6);
+        Paragraph subtitulo =
+                new Paragraph(
+                 "Reporte General de Alumnos",
+                 fuenteSubtitulo
+                );
 
-        tabla.addCell("Nombre");
-        tabla.addCell("Matricula");
-        tabla.addCell("Estatus");
-        tabla.addCell("CURP");
-        tabla.addCell("Fecha");
-        tabla.addCell("Telefono");
+        documento.add(subtitulo);
 
 
-        // Obtener alumnos
-        clsAlumno alumno = new clsAlumno();
+        String fechaActual =
+                new SimpleDateFormat(
+                        "dd/MM/yyyy HH:mm"
+                ).format(new Date());
+
+
+        Paragraph fecha =
+                new Paragraph(
+                 "Fecha: "
+                 + fechaActual,
+                 fuenteSubtitulo
+                );
+
+        fecha.setSpacingAfter(20f);
+
+        documento.add(fecha);
+
+
+
+        // TABLA
+        PdfPTable tabla =
+                new PdfPTable(6);
+
+        tabla.setWidthPercentage(100);
+
+        tabla.setWidths(
+                new float[]{
+                        4f,
+                        2f,
+                        2f,
+                        3f,
+                        3f,
+                        3f
+                }
+        );
+
+
+        String[] cabeceras = {
+
+                "NOMBRE",
+                "MATRICULA",
+                "ESTATUS",
+                "CURP",
+                "FECHA",
+                "TELEFONO"
+
+        };
+
+
+        for(String texto:cabeceras){
+
+            PdfPCell celda =
+                    new PdfPCell(
+                      new Phrase(
+                              texto,
+                              fuenteCabecera
+                      )
+                    );
+
+            celda.setBackgroundColor(
+             new BaseColor(41,128,185)
+            );
+
+            celda.setHorizontalAlignment(
+                    Element.ALIGN_CENTER
+            );
+
+            celda.setPadding(8f);
+
+            tabla.addCell(celda);
+        }
+
+
+
+        clsAlumno alumno =
+                new clsAlumno();
 
         ListModel<String> lista =
                 alumno.LlenarLista();
 
+        int activos = 0;
 
-        for(int i=0; i<lista.getSize(); i++){
+
+
+        for(int i=0;i<lista.getSize();i++){
 
             String registro =
                     lista.getElementAt(i);
@@ -682,68 +813,136 @@ public class frmAlumno extends javax.swing.JFrame {
             String datos[] =
                     registro.split("\\|");
 
-            tabla.addCell(
-                    datos[0]
-                    .replace("Nombre: ","")
-                    .trim()
-            );
 
             tabla.addCell(
-                    datos[1]
-                    .replace("Matricula: ","")
-                    .trim()
+             datos[0]
+             .replace("Nombre: ","")
+             .trim()
             );
+
+
+            tabla.addCell(
+             datos[1]
+             .replace("Matricula: ","")
+             .trim()
+            );
+
 
             String estatus =
-                datos[2]
-                .replace("Estatus: ","")
-                .trim();
+             datos[2]
+             .replace("Estatus: ","")
+             .trim();
 
-                if(estatus.equalsIgnoreCase("true")){
-                tabla.addCell("Activo");
-                }
-                else{
-                tabla.addCell("Inactivo");
+
+            PdfPCell celdaStatus;
+
+            if(estatus.equalsIgnoreCase("true")){
+
+                celdaStatus =
+                 new PdfPCell(
+                  new Phrase("Activo")
+                 );
+
+                activos++;
+
+            }
+            else{
+
+                celdaStatus =
+                 new PdfPCell(
+                  new Phrase("Inactivo")
+                 );
+
             }
 
-            tabla.addCell(
-                    datos[3]
-                    .replace("Curp: ","")
-                    .trim()
+            celdaStatus.setHorizontalAlignment(
+                    Element.ALIGN_CENTER
             );
 
-            tabla.addCell(
-                    datos[4]
-                    .replace("Fecha de Nacimiento: ","")
-                    .trim()
-            );
+            tabla.addCell(celdaStatus);
+
+
 
             tabla.addCell(
-                    datos[5]
-                    .replace("Telefono: ","")
-                    .trim()
+             datos[3]
+             .replace("Curp: ","")
+             .trim()
             );
+
+
+            tabla.addCell(
+             datos[4]
+             .replace(
+               "Fecha de Nacimiento: ",
+               ""
+             )
+             .trim()
+            );
+
+
+            tabla.addCell(
+             datos[5]
+             .replace(
+               "Telefono: ",
+               ""
+             )
+             .trim()
+            );
+
         }
+
 
         documento.add(tabla);
 
+
+
+        int total =
+                lista.getSize();
+
+        Paragraph resumen =
+                new Paragraph(
+
+                 "\nTotal alumnos: "
+                 + total +
+
+                 "\nAlumnos activos: "
+                 + activos +
+
+                 "\nAlumnos inactivos: "
+                 + (total-activos),
+
+                 fuenteTotal
+                );
+
+
+        resumen.setAlignment(
+                Element.ALIGN_RIGHT
+        );
+
+
+        documento.add(resumen);
+
+
         documento.close();
+
 
         JOptionPane.showMessageDialog(
                 this,
-                "PDF exportado correctamente"
+                "PDF generado correctamente"
         );
+
 
     }
     catch(Exception e){
 
         JOptionPane.showMessageDialog(
                 this,
-                "Error: "+e.getMessage()
+                "Error: "
+                + e.getMessage()
         );
 
-        System.out.println(e);
-        }
+    }
+
     }//GEN-LAST:event_jmiReporteActionPerformed
 
     private void jmiImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiImportarActionPerformed
