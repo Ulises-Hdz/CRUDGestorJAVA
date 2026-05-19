@@ -28,6 +28,7 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Dimension;
 /**
  *
  * @author dogza
@@ -42,7 +43,9 @@ public class frmAlumno extends javax.swing.JFrame {
      */
     public frmAlumno() {
         initComponents();
-      
+       this.lstAlumnos.setPreferredSize(new Dimension(115, 120));
+       this.lstAlumnos.setMinimumSize(new Dimension(115, 120));
+       this.lstAlumnos.setMaximumSize(new Dimension(115, 120));
     }
 
     clsAlumno updateAlumno;
@@ -181,8 +184,9 @@ public class frmAlumno extends javax.swing.JFrame {
                     .addComponent(lblTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(60, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,7 +218,8 @@ public class frmAlumno extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblTelefono)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Actualizacion de Alumno", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Comic Sans MS", 0, 12))); // NOI18N
@@ -469,6 +474,7 @@ public class frmAlumno extends javax.swing.JFrame {
 
         jmiImportar.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         jmiImportar.setText("Importar CSV");
+        jmiImportar.addActionListener(this::jmiImportarActionPerformed);
         jMenu1.add(jmiImportar);
 
         jmiJson.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
@@ -497,10 +503,10 @@ public class frmAlumno extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(23, 23, 23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -740,6 +746,20 @@ public class frmAlumno extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jmiReporteActionPerformed
 
+    private void jmiImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiImportarActionPerformed
+        // TODO add your handling code here:
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                "Es importante que el archivo a importar tenga el nombre " + 
+                    "alumnos.csv y se encuentra en la raiz del proyecto",
+                "Importanción de Datos desde el archivo CSV",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        
+        if(respuesta == JOptionPane.YES_OPTION){
+            clsCSV cCsv = new clsCSV();
+            cCsv.importarClientes();
+        }
+    }//GEN-LAST:event_jmiImportarActionPerformed
+
     private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtTelefonoActionPerformed
         // TODO add your handling code here:
     }// GEN-LAST:event_txtTelefonoActionPerformed
@@ -840,7 +860,6 @@ public class frmAlumno extends javax.swing.JFrame {
             String fecha = datos[4].replace("Fecha de Nacimiento: ", "").trim();
             String telefono = datos[5].replace("Telefono: ", "").trim();
             
-            chkEstatus1.setEnabled(false);
             chkEstatus2.setEnabled(false);
             
             // Se toma del txt como yyyy-MM-dd
