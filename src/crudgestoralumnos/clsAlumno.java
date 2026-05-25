@@ -98,6 +98,46 @@ public class clsAlumno {
         
     }
     
+    public DefaultListModel<String> LlenarListaPorMatricula(String matricula) {
+mAlumno mClient = new mAlumno();
+    ArrayList<String> datos = mClient.consultar();
+    DefaultListModel<String> modelLista = new DefaultListModel<>();
+    boolean encontrado = false;
+    
+    // Limpiamos la matrícula que ingresó el usuario por si acaso
+    String matriculaBuscar = matricula.trim();
+    
+    System.out.println("--- INICIANDO BÚSQUEDA ---");
+    System.out.println("Matrícula que estás buscando: '" + matriculaBuscar + "'");
+
+    for (String registro : datos) {
+        String[] campos = registro.split("\\|");
+        
+        if (campos.length > 1) {
+            // .trim() elimina cualquier espacio en blanco invisible al inicio o final
+            String matriculaRegistro = campos[1].replace("Matricula:", "").trim();
+            
+            // ESTO ES PARA DEPURAR: Verá en consola qué matrícula está revisando en este turno
+            System.out.println("Comparando con matrícula del archivo: '" + matriculaRegistro + "'");
+            
+            if (matriculaRegistro.equalsIgnoreCase(matriculaBuscar)) {
+                System.out.println("¡Coincidencia encontrada!");
+                modelLista.addElement(registro);
+                encontrado = true;
+                break; 
+            }
+        }
+    }
+    
+    if (!encontrado) {
+        System.out.println("No se encontró ninguna coincidencia en el archivo.");
+        modelLista.addElement("No se encontró ningún alumno con la matrícula: " + matriculaBuscar);
+    }
+    System.out.println("-------------------------");
+    
+    return modelLista;
+}
+    
     public String getNombre() {
         return this.Nombre;
     }

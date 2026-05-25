@@ -988,6 +988,24 @@ public class frmAlumno extends javax.swing.JFrame {
         
         String fechaLimpia = strFecha.replace("/", "").replace("_", "").trim();
         
+        // 2. Validación de longitud exacta (10 caracteres)
+        if (strTelefono.length() != 10) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "El número de teléfono debe tener exactamente 10 dígitos.", 
+                "Error de validación", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            return; // Detiene la ejecución si no cumple
+        }
+
+        // 3. Validación opcional pero recomendada: que sean solo dígitos
+        if (!strTelefono.matches("\\d+")) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "El teléfono solo debe contener números.", 
+                "Error de validación", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            return; // Detiene la ejecución si contiene letras o símbolos
+        }
+        
         // Validacion para campos sin llenar al guardar
         if (strNombre.isEmpty() || strMatricula.isEmpty() ||
                 strCurp.isEmpty() || fechaLimpia.isEmpty() || strTelefono.isEmpty()) {
@@ -1031,7 +1049,20 @@ public class frmAlumno extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         clsAlumno cAlumno = new clsAlumno();
+    
+        // 1. Obtener la matrícula y quitar espacios en blanco
+        String matriculaBusqueda = txtBuscarMatricula.getText().trim();
+    
+        // 2. Verificar si el campo está vacío o no
+        if (matriculaBusqueda.isEmpty()) {
+        // Si está vacío, busca a todos los alumnos (Búsqueda General)
         lstAlumnos.setModel(cAlumno.LlenarLista());
+        } else {
+        // Si tiene texto, busca solo esa matrícula (Búsqueda Específica)
+        // Nota: Asegúrate de crear este método en tu clase clsAlumno
+        lstAlumnos.setModel(cAlumno.LlenarListaPorMatricula(matriculaBusqueda));
+        }
+        
     }// GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnActualizarActionPerformed
@@ -1056,53 +1087,87 @@ public class frmAlumno extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (!evt.getValueIsAdjusting()) {
 
-            // Le asigan el valor de la lista selecionado
+            // Le asigna el valor de la lista seleccionado
             String registroSeleccionado = lstAlumnos.getSelectedValue();
 
             if (registroSeleccionado == null) {
                 return;
             }
 
-            // Separar los datos por el caracter especial
-            String[] datos = registroSeleccionado.split("\\|");
+            // VALIDACIÓN CLAVE: Verificar si contiene "|" antes de intentar separar y mapear
+            if (registroSeleccionado.contains("|")) {
+            
+                // Separar los datos por el caracter especial
+                String[] datos = registroSeleccionado.split("\\|");
 
-            String nombre = datos[0].replace("Nombre: ", "").trim();
-            String matricula = datos[1].replace("Matricula: ", "").trim();
-            String estatus = datos[2].replace("Estatus: ", "").trim();
-            String curp = datos[3].replace("Curp: ", "").trim();
-            String fecha = datos[4].replace("Fecha de Nacimiento: ", "").trim();
-            String telefono = datos[5].replace("Telefono: ", "").trim();
-            
-            chkEstatus2.setEnabled(false);
-            
-            // Se toma del txt como yyyy-MM-dd
-            DateTimeFormatter formatoEntrada = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate fechaNac = java.time.LocalDate.parse(fecha, formatoEntrada);
-            
-            // Se transforma en el label
-            DateTimeFormatter formatoVista = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String fechaFormateada = fechaNac.format(formatoVista);
-            
-            // Llenamos los campos de texto
-            txtNombre1.setText(nombre);
-            txtMatricula1.setText(matricula);
-            chkEstatus1.setSelected(Boolean.parseBoolean(estatus));
-            txtCurp1.setText(curp);
-            txtFecha1.setText(fechaFormateada);
-            txtTelefono1.setText(telefono);
+                // Nos aseguramos de que tenga las 6 partes que componen al alumno
+                if (datos.length >= 6) {
+                
+                    String nombre = datos[0].replace("Nombre: ", "").trim();
+                    String matricula = datos[1].replace("Matricula: ", "").trim();
+                    String estatus = datos[2].replace("Estatus: ", "").trim();
+                    String curp = datos[3].replace("Curp: ", "").trim();
+                    String fecha = datos[4].replace("Fecha de Nacimiento: ", "").trim();
+                    String telefono = datos[5].replace("Telefono: ", "").trim();
+                
+                    chkEstatus2.setEnabled(false);
+                
+                    // Se toma del txt como yyyy-MM-dd
+                    DateTimeFormatter formatoEntrada = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate fechaNac = java.time.LocalDate.parse(fecha, formatoEntrada);
+                
+                    // Se transforma en el label
+                    DateTimeFormatter formatoVista = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    String fechaFormateada = fechaNac.format(formatoVista);
+                
+                    // Llenamos los campos de texto
+                    txtNombre1.setText(nombre);
+                    txtMatricula1.setText(matricula);
+                    chkEstatus1.setSelected(Boolean.parseBoolean(estatus));
+                    txtCurp1.setText(curp);
+                    txtFecha1.setText(fechaFormateada);
+                    txtTelefono1.setText(telefono);
 
-            // Llenamos los lbl
-            lblNombre.setText(nombre);
-            lblMatricula.setText(matricula);
-            chkEstatus2.setSelected(Boolean.parseBoolean(estatus));
-            lblCurp.setText(curp);
-            lblFechaNacimiento.setText(fechaFormateada);
-            lblTelefono.setText(telefono);
+                    // Llenamos los lbl
+                    lblNombre.setText(nombre);
+                    lblMatricula.setText(matricula);
+                    chkEstatus2.setSelected(Boolean.parseBoolean(estatus));
+                    lblCurp.setText(curp);
+                    lblFechaNacimiento.setText(fechaFormateada);
+                    lblTelefono.setText(telefono);
 
-            // Llenamos el objeto con los valores original
-            updateAlumno = new clsAlumno(nombre, matricula, Boolean.parseBoolean(estatus), curp, fechaNac, telefono);
+                    // Llenamos el objeto con los valores originales
+                    updateAlumno = new clsAlumno(nombre, matricula, Boolean.parseBoolean(estatus), curp, fechaNac, telefono);
+                }
+        } else {
+            // OPCIONAL: Si haces clic en el mensaje de error o en un renglón vacío, 
+            // puedes limpiar los campos para que no se queden los datos del alumno anterior.
+            limpiarCamposFormulario(); 
         }
-    }// GEN-LAST:event_lstAlumno
+    }
+    }
+    private void limpiarCamposFormulario() {
+        // 1. Limpiar campos de texto del panel de Actualización
+        txtNombre1.setText("");
+        txtMatricula1.setText("");
+        chkEstatus1.setSelected(false);
+        txtCurp1.setText("");
+        txtFecha1.setText("");
+        txtTelefono1.setText("");
+
+        // 2. Limpiar las etiquetas (Labels) del panel de Eliminación
+        lblNombre.setText("Nombre...");
+        lblMatricula.setText("Matricula...");
+        chkEstatus2.setSelected(false);
+        lblCurp.setText("CURP...");
+        lblFechaNacimiento.setText("Fecha...");
+        lblTelefono.setText("Telefono...");
+        
+        // 3. Anular el objeto de actualización para que no guarde basura
+        updateAlumno = null;
+    }
+
+    // GEN-LAST:event_lstAlumno
 
     /**
      * @param args the command line arguments
