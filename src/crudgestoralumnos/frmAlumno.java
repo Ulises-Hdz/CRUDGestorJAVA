@@ -53,9 +53,20 @@ public class frmAlumno extends javax.swing.JFrame {
      */
     public frmAlumno() {
         initComponents();
-       this.lstAlumnos.setPreferredSize(new Dimension(115, 120));
-       this.lstAlumnos.setMinimumSize(new Dimension(115, 120));
-       this.lstAlumnos.setMaximumSize(new Dimension(115, 120));
+    // 1. Quitamos los tamaños fijos de la lista (para que no corte el texto largo)
+    this.lstAlumnos.setPreferredSize(null);
+    this.lstAlumnos.setMinimumSize(null);
+    this.lstAlumnos.setMaximumSize(null);
+    
+    // 2. CONGELAMOS EL CONTENEDOR (jScrollPane2) al tamaño que tú querías (ej. 150x120 o el que te guste)
+    Dimension tamanoFijoScroll = new Dimension(250, 120); // Le di un poco más de ancho (250) para que sea cómodo
+    this.jScrollPane2.setPreferredSize(tamanoFijoScroll);
+    this.jScrollPane2.setMinimumSize(tamanoFijoScroll);
+    this.jScrollPane2.setMaximumSize(tamanoFijoScroll);
+    
+    // 3. Forzamos a que aparezca la barra horizontal cuando el texto se salga del JScrollPane
+    this.jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    this.lstAlumnos.setLayoutOrientation(javax.swing.JList.VERTICAL);
     }
 
     clsAlumno updateAlumno;
@@ -102,7 +113,8 @@ public class frmAlumno extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         txtBuscarMatricula = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
         lstAlumnos = new javax.swing.JList<>();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -348,7 +360,9 @@ public class frmAlumno extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         lstAlumnos.addListSelectionListener(this::lstAlumno);
-        jScrollPane1.setViewportView(lstAlumnos);
+        jScrollPane2.setViewportView(lstAlumnos);
+
+        jScrollPane3.setViewportView(jScrollPane2);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -357,13 +371,13 @@ public class frmAlumno extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
                         .addComponent(txtBuscarMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -375,8 +389,8 @@ public class frmAlumno extends javax.swing.JFrame {
                     .addComponent(txtBuscarMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(68, 68, 68))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), "Registro de Alumno", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Comic Sans MS", 0, 12))); // NOI18N
@@ -442,7 +456,7 @@ public class frmAlumno extends javax.swing.JFrame {
                         .addComponent(chkEstatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtCurp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                         .addComponent(txtFecha)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1154,6 +1168,8 @@ public class frmAlumno extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JMenuItem jmiImportar;
     private javax.swing.JMenuItem jmiJson;
     private javax.swing.JMenuItem jmiReporte;
